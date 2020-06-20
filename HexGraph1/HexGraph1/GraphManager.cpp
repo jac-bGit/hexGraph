@@ -2,6 +2,12 @@
 
 GraphManager::GraphManager(vector<vector<Node>> nodes)
 {
+	//setup players
+	players = new Player[2];
+	players[0] = Player(PlayerSide::RedPlayer);
+	players[1] = Player(PlayerSide::BluePlayer);
+
+	//setup nodes
 	this->nodes = nodes;
 
 	//create edge matrix
@@ -16,7 +22,7 @@ GraphManager::GraphManager(vector<vector<Node>> nodes)
 	//get all edge connections
 	for (int x = 0; x < nodes.size(); x++) {
 		for (int z = 0; z < nodes[0].size(); z++) {
-			GetConnectedNodesOn(nodes[x][z]);
+			MakeEdgeConnections(nodes[x][z]);
 		}
 	}
 
@@ -30,6 +36,19 @@ GraphManager::GraphManager(vector<vector<Node>> nodes)
 
 }
 
+//set graph nodes to grey and player to beginning state
+void GraphManager::DefaultState()
+{
+	//all node to grey
+	for (int x = 0; x < nodes.size(); x++) {
+		for (int z = 0; z < nodes[0].size(); z++) {
+			nodes[x][z].SetState(Nodestate::Grey);
+		}
+	}
+
+	//default player states
+}
+
 void GraphManager::ChangeStateOn(Vector3 position, Nodestate state)
 {
 	//find node with selected position
@@ -39,18 +58,29 @@ void GraphManager::ChangeStateOn(Vector3 position, Nodestate state)
 			break;
 		}
 	}*/
-
+	Node* p_node = nullptr;
+	
 	for (int x = 0; x < nodes.size(); x++) {
 		for (int z = 0; z < nodes.size(); z++) {
+			//change state if this choosed position
 			if (nodes[x][z].GetPosition() == position) {
 				nodes[x][z].SetState(state);
+				p_node = &nodes[x][z];
 				break;
 			}
 		}
 	}
+
+	//update players claimed nodes
+	if (state > 0) {
+		if (p_node->IsVortex())
+			players[state - 1].AddClaimedVortex(*p_node);
+		else
+			players[state - 1].AddClaimedNode(*p_node);
+	}
 }
 
-void GraphManager::GetConnectedNodesOn(Node node)
+void GraphManager::MakeEdgeConnections(Node node)
 {
 	//check 
 	for (int i = 0; i < s_nodeSides; i++) {
@@ -80,9 +110,10 @@ void GraphManager::GetConnectedNodesOn(Node node)
 	}
 }
 
-void GraphManager::CheckWin()
+void GraphManager::CheckWinFor(GameState gameState)
 {
 	//choose claimed vortex
+	 
 
 	//find if there is another connected point
 

@@ -1,10 +1,14 @@
 #pragma once
+
+#include <iostream>
 #include <vector>
 #include "Node.h"
 #include "Edge.h"
-#include <iostream>
+#include "Player.h"
 
 using namespace std;
+
+class Player;
 
 enum GameState {
 	Playing = 0,
@@ -15,6 +19,8 @@ enum GameState {
 class GraphManager
 {
 private:
+	Player* players;
+
 	vector<vector<Node>> nodes;
 	//vector<Edge> edges;
 	vector<vector<bool>> edges;
@@ -26,9 +32,8 @@ public:
 	void DefaultState();
 	void ChangeStateOn(Vector3 position, Nodestate state);
 	void ChangeStateOn(int x, int z, Nodestate state);
-	void GetConnectedNodesOn(Node node);
-
-	void CheckWin();
+	void MakeEdgeConnections(Node node);
+	void CheckWinFor(GameState gameState);
 
 	Node* GetNodeByPosition(Vector3 position);
 

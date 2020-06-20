@@ -26,7 +26,7 @@ int main()
     manager.ChangeStateOn(Vector3(3, 0, 0), Nodestate::Red);
 
     //check win
-    manager.CheckWin();
+    //manager.CheckWin();
 
     //show node directions 
     for (int i = 0; i < s_nodeSides; i++) {

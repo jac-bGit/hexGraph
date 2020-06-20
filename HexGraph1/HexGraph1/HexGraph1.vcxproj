@@ -150,11 +150,13 @@
     <ClCompile Include="GraphManager.cpp" />
     <ClCompile Include="HexGraph1.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Edge.h" />
     <ClInclude Include="GraphManager.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

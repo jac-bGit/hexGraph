@@ -21,21 +21,26 @@ class GraphManager
 private:
 	Player* players;
 
-	vector<vector<Node>> nodes;
+	vector<Node> nodes;
 	//vector<Edge> edges;
 	vector<vector<bool>> edges;
 	GameState gameState = GameState::Playing;
 
 public:
-	GraphManager(vector<vector<Node>> nodes);
+	GraphManager(vector<Node> nodes);
 
 	void DefaultState();
 	void ChangeStateOn(Vector3 position, Nodestate state);
 	void ChangeStateOn(int x, int z, Nodestate state);
-	void MakeEdgeConnections(Node node);
-	void CheckWinFor(GameState gameState);
+	void MakeAdjecencyOn(Node node);
+	void AddNodeConnections(Node* node);
+	bool IsWinner(int playerSide);
+
+	void ShowClaimedNodes(int playerSide);
+	void ShowClaimedNodesConnections(int playerSide);
 
 	Node* GetNodeByPosition(Vector3 position);
+	Node* GetNodeByConnetion(Node& nodeBase, Vector3 direction);
 
 	GameState GetGameState();
 };

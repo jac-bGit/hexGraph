@@ -13,19 +13,19 @@ class Player
 
 private:
 	PlayerSide playerSide;
-	vector<Node> claimedNodes;
-	vector<Node> claimedVortexes;
+	vector<Node*> claimedNodes;
+	vector<Node*> claimedVortexes;
 
 public:
 	Player();
 	Player(PlayerSide playerSide);
 	~Player();
 
-	void AddClaimedNode(Node node);
-	void AddClaimedVortex(Node node);
+	void AddClaimedNode(Node* node);
+	void AddClaimedVortex(Node* node);
 
 	PlayerSide GetPlayerSide();
-	vector<Node> GetClaimedNodes();
-	vector<Node> GetClaimedVortexes();
+	vector<Node*> GetClaimedNodes();
+	vector<Node*> GetClaimedVortexes();
 };
 

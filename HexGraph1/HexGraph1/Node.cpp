@@ -56,7 +56,13 @@ float Node::GetXOffset()
 	return xOffset;
 }
 
-Node* Node::GetConnectedNodes()
+vector<Node*> Node::GetConnectedNodes()
+{	
+	return connectedNodes;
+}
+
+void Node::AddConnection(Node* node)
 {
-	return &connectedNodes[0];
+	connectedNodes.push_back(node);
+	cout << "connectedNodes size: " << connectedNodes.size() << endl;
 }

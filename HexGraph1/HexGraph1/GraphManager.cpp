@@ -85,11 +85,12 @@ void GraphManager::ChangeStateOn(Vector3 position, Nodestate state)
 
 	//update players claimed nodes
 	if (state > 0 && node != nullptr) {
-		cout << "adding to player" << endl;
-		if (node->IsVortex())
-			players[state - 1].AddClaimedVortex(node); //vortexes
-		else
-			players[state - 1].AddClaimedNode(node); //nodes
+		players[state - 1].AddClaimedNode(node);
+		cout << "adding node to player " << state << endl;
+		//if (node->IsVortex())
+		//	players[state - 1].AddClaimedVortex(node); //vortexes
+		//else
+		//	players[state - 1].AddClaimedNode(node); //nodes
 	}
 
 	AddNodeConnections(node);
@@ -147,9 +148,9 @@ void GraphManager::AddNodeConnections(Node* node)
 
 bool GraphManager::IsWinner(int playerSide)
 {
-	vector<Node*>* nodes = &players[playerSide - 1].GetClaimedNodes();
-	vector<Node*>* vortexes = &players[playerSide - 1].GetClaimedVortexes();
-	int vortexCount = vortexes->size();
+	vector<Node*> nodes = players[playerSide - 1].GetClaimedNodes();
+	vector<Node*> vortexes = players[playerSide - 1].GetClaimedVortexes();
+	int vortexCount = vortexes.size();
 
 	if (vortexCount < 2) {
 		cout << "player hasn't claim even 2 vortexes" << endl;
@@ -157,12 +158,41 @@ bool GraphManager::IsWinner(int playerSide)
 	
 	//find path if there are still atleast 2 unsearched vortexes
 	while (vortexCount > 1) {
+		vector<Node*>* path = new vector<Node*>();
+
 		//choose start point - one of claimed vortexes
-		Node* currentNode = players[playerSide - 1].GetClaimedVortexes()[vortexCount - 1];
-		//find another connected nodes
-		
+		Node currentNode = *vortexes[vortexCount - 1];
+		path->push_back(&currentNode);
+
+		while (true) {
+			//find current node connetions
+			if (currentNode.IsContected()) {
+				Node nextNode = *currentNode.GetConnectedNodes()[0];
+
+				//is next node vertex
+				if (nextNode.IsVortex()) {
+					return true; //connection is succesful
+				}
+				else {
+					//add to path
+					path->push_back(&nextNode);
+					//delete connection
+					currentNode.RemoveConnection(0);
+					//move to next
+					currentNode = nextNode;
+				}
+
+			}
+			else {
+				//return back
+				currentNode = *(*path->end() - 1);
+				//erase from path
+				path->erase(path->end());
+			}
+		}
 
 		vortexCount--;
+		delete path;
 	}
 
 	//move to another point a check next connection
@@ -233,4 +263,9 @@ Node* GraphManager::GetNodeByPosition(Vector3 position)
 GameState GraphManager::GetGameState()
 {
 	return gameState;
+}
+
+void GraphManager::SetGameState(GameState gameState)
+{
+	this->gameState = gameState;
 }

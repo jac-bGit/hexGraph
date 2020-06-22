@@ -64,5 +64,11 @@ vector<Node*> Node::GetConnectedNodes()
 void Node::AddConnection(Node* node)
 {
 	connectedNodes.push_back(node);
-	cout << "connectedNodes size: " << connectedNodes.size() << endl;
+	//cout << "connectedNodes size: " << connectedNodes.size() << endl;
+}
+
+//remove connection to this node
+void Node::RemoveConnection(int id)
+{
+	connectedNodes.erase(connectedNodes.begin() + id);
 }

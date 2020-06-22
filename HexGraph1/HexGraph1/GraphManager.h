@@ -43,5 +43,6 @@ public:
 	Node* GetNodeByConnetion(Node& nodeBase, Vector3 direction);
 
 	GameState GetGameState();
+	void SetGameState(GameState gameState);
 };
 

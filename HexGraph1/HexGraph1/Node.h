@@ -68,5 +68,6 @@ public:
 	vector<Node*> GetConnectedNodes();
 
 	void AddConnection(Node* node);
+	void RemoveConnection(int id);
 };
 

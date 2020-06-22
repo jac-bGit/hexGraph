@@ -9,6 +9,7 @@ Node::Node(int id, Vector3 position, bool isVortex)
 	this->id = id;
 	this->position = position;
 	this->isVortex = isVortex;
+	this->state = Nodestate::Grey;
 
 	//offset for odd z position
 	if ((int)position.z % 2 != 0)
@@ -89,13 +90,10 @@ vector<Node*> Node::GetConnectedNodes()
 void Node::AddConnection(Node* node)
 {
 	connectedNodes.push_back(node);
-	//cout << "connectedNodes size: " << connectedNodes.size() << endl;
-	//cout << "add is empty: " << endl;
 }
 
 //remove connection to this node
 void Node::RemoveConnection(int id)
 {
 	connectedNodes.erase(connectedNodes.begin() + id);
-	//cout << "remove is empty: " << endl;
 }

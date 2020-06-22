@@ -18,7 +18,6 @@ private:
 public:
 	Player();
 	Player(PlayerSide playerSide);
-	~Player();
 
 	void AddClaimedNode(Node* node);
 	void RestartPlayer();

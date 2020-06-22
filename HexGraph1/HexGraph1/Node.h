@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const float PI = 3.1415927;
+const double PI = 3.1415927;
 
 //definition of node shape
 const static int s_nodeSides = 6;
@@ -25,12 +25,8 @@ static Vector3 s_nodeDirections[s_nodeSides] = {
 static Vector3 NormalizeDirection2D(Vector3 direction, float xOffset) {
 	//x
 	direction.x = round(direction.x - 0.1 + xOffset);
-	/*if(direction.x != 0)
-		direction.x /= abs(direction.x);*/
 	//z
 	direction.z = round(direction.z);
-	/*if (direction.z != 0)
-		direction.z /= abs(direction.z);*/
 
 	return direction;
 }
@@ -49,7 +45,7 @@ private:
 	int id;
 	Vector3 position;
 	float xOffset = 0;
-	Nodestate state = Nodestate::Grey;
+	Nodestate state;
 	bool isVortex;
 	Node** neighbourNodes;
 	int neighbourCount = 0;

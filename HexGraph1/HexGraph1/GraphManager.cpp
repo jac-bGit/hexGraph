@@ -7,34 +7,6 @@ GraphManager::GraphManager(vector<Node> nodes)
 	players[0] = Player(PlayerSide::RedPlayer);
 	players[1] = Player(PlayerSide::BluePlayer);
 
-	//setup nodes
-	//this->nodes = nodes;
-
-	////create edge matrix
-	//for (int x = 0; x < nodes.size(); x++) {
-	//	vector<bool> row;
-	//	for (int z = 0; z < nodes.size(); z++) {
-	//		row.push_back(false);
-	//	}
-	//	edges.push_back(row);
-	//}
-
-	////get all edge connections
-	//for (int x = 0; x < nodes.size(); x++) {
-	//	/*for (int z = 0; z < nodes[0].size(); z++) {
-	//		MakeAdjecencyOn(nodes[x][z]);
-	//	}*/
-	//	MakeAdjecencyOn(nodes[x]);
-	//}
-
-	////show edge matrix
-	//for (int x = 0; x < edges.size(); x++) {
-	//	for (int z = 0; z < edges[0].size(); z++) {
-	//		std::cout << edges[x][z] << " ";
-	//	}
-	//	std::cout << endl;
-	//}
-
 }
 
 GraphManager::GraphManager(Vector3 graphSize, int vortexCount)
@@ -45,87 +17,19 @@ GraphManager::GraphManager(Vector3 graphSize, int vortexCount)
 	players[1] = Player(PlayerSide::BluePlayer);
 
 	//setup nodes
-	this->graphSize = graphSize;
-	this->nodeGraph = new Node*[(int)graphSize.x];
-	int id = 0;
-
-	for (int x = 0; x < (int)graphSize.x; x++) {
-		//set row
-		nodeGraph[x] = new Node[(int)graphSize.z];
-		for (int z = 0; z < (int)graphSize.z; z++) {
-			//create nodes
-			nodeGraph[x][z] = Node(id, Vector3(x, 0, z), false);
-			id++;
-		}
-	}
+	CreateGraph(graphSize);
 	cout << "node graph created" << endl;
+}
 
-	//set neighbours
-	for (int x = 0; x < (int)graphSize.x; x++) {
-		for (int z = 0; z < (int)graphSize.z; z++) {
-
-			//count neighbours
-			int neighbourCount = 0;
-			for (int i = 0; i < s_nodeSides; i++) {
-				Vector3 dir = NormalizeDirection2D(s_nodeDirections[i], nodeGraph[x][z].GetXOffset());
-				//get node by direction
-				int nextX = x + dir.x;
-				int nextZ = z + dir.z;
-				//check if there is node in direction
-				if (nextX >= 0 && nextX < (int)graphSize.x && nextZ >= 0 && nextZ < (int)graphSize.z)
-					neighbourCount++;
-			}
-
-			nodeGraph[x][z].SetNeighbourCount(neighbourCount);
-			cout << "neighbourCount for node [" << x << ", " << z << "]: " << neighbourCount << endl;
-
-			//add neighbour
-			if (neighbourCount > 0) {
-				Node** neighbours = new Node * [neighbourCount];
-				for (int i = 0; i < s_nodeSides; i++) {
-					Vector3 dir = NormalizeDirection2D(s_nodeDirections[i], nodeGraph[x][z].GetXOffset());
-					//get node by direction
-					int nextX = x + dir.x;
-					int nextZ = z + dir.z;
-					//check if there is node in direction
-					if (nextX >= 0 && nextX < (int)graphSize.x && nextZ >= 0 && nextZ < (int)graphSize.z) {
-						neighbours[neighbourCount - 1] = &nodeGraph[nextX][nextZ];
-						neighbourCount--;
-						cout << "neighbour id for node [" << x << ", " << z << "]: " << ": #" << "[" << neighbours[neighbourCount]->GetPosition().x << ", " << neighbours[neighbourCount]->GetPosition().z << "]: " << endl;
-					}
-				}
-
-				nodeGraph[x][z].SetNeighbourNodes(neighbours);
-				//delete *neighbours;
-			}
-		}
-	}
-
-	//show neighbours
-	for (int x = 0; x < (int)graphSize.x; x++) {
-		for (int z = 0; z < (int)graphSize.z; z++) {
-			
-			cout << "node [" << x << ", " << z << "] neighbours: " << nodeGraph[x][z].GetNeighbourCount() << endl;
-			for(int i = 0; i < nodeGraph[x][z].GetNeighbourCount(); i++)
-				cout << "node #" << nodeGraph[x][z].GetId() << "["<< x << ", "<< z << "]: #" << nodeGraph[x][z].GetNeighbourNodes()[i]->GetId() <<
-				" on cord: [" << nodeGraph[x][z].GetNeighbourNodes()[i]->GetPosition().x << "," <<
-				nodeGraph[x][z].GetNeighbourNodes()[i]->GetPosition().y << "]"<< endl;
-		}
-	} 
-
-	//set vortexes
-	nodeGraph[0][0].SetIsVortex(true);
-	nodeGraph[2][0].SetIsVortex(true);
+GraphManager::~GraphManager()
+{
+	delete nodeGraph;
 }
 
 //set graph nodes to grey and player to beginning state
 void GraphManager::DefaultState()
 {
-	//all nodes to grey
-	/*for (int x = 0; x < nodes.size(); x++) {
-		nodes[x].SetState(Nodestate::Grey);
-	}*/
-
+	//all node to grey
 	for (int x = 0; x < GetNodeGraphSize().x; x++) {
 		for (int z = 0; z < GetNodeGraphSize().z; z++) {
 			nodeGraph[x]->SetState(Nodestate::Grey);
@@ -137,62 +41,81 @@ void GraphManager::DefaultState()
 	players[1].RestartPlayer();
 }
 
+void GraphManager::CreateGraph(Vector3 graphSize)
+{
+	this->graphSize = graphSize;
+	this->nodeGraph = new Node * [(int)graphSize.x];
+	int id = 0;
+
+	for (int x = 0; x < (int)graphSize.x; x++) {
+		//set row
+		nodeGraph[x] = new Node[(int)graphSize.z];
+		for (int z = 0; z < (int)graphSize.z; z++) {
+			//create nodes
+			nodeGraph[x][z] = Node(id, Vector3(x, 0, z), false);
+			id++;
+		}
+	}
+
+	//set neighbours
+	for (int x = 0; x < (int)graphSize.x; x++) {
+		for (int z = 0; z < (int)graphSize.z; z++) {
+
+			//count neighbours
+			int neighbourCount = 0;
+			for (int i = 0; i < s_nodeSides; i++) {
+				Vector3 dir = NormalizeDirection2D(s_nodeDirections[i], nodeGraph[x][z].GetXOffset());
+				int nextX = x + dir.x;
+				int nextZ = z + dir.z;
+				//within graph size
+				if (nextX >= 0 && nextX < (int)graphSize.x && nextZ >= 0 && nextZ < (int)graphSize.z)
+					neighbourCount++;
+			}
+			nodeGraph[x][z].SetNeighbourCount(neighbourCount);
+
+			//add neighbour
+			if (neighbourCount > 0) {
+				Node** neighbours = new Node * [neighbourCount];
+				for (int i = 0; i < s_nodeSides; i++) {
+					Vector3 dir = NormalizeDirection2D(s_nodeDirections[i], nodeGraph[x][z].GetXOffset());
+					int nextX = x + dir.x;
+					int nextZ = z + dir.z;
+					//check if there is node in direction
+					if (nextX >= 0 && nextX < (int)graphSize.x && nextZ >= 0 && nextZ < (int)graphSize.z) {
+						neighbours[neighbourCount - 1] = &nodeGraph[nextX][nextZ];
+						neighbourCount--;
+					}
+				}
+
+				nodeGraph[x][z].SetNeighbourNodes(neighbours);
+			}
+		}
+	}
+
+	//set vortexes
+	nodeGraph[0][0].SetIsVortex(true);
+	nodeGraph[7][4].SetIsVortex(true);
+}
+
 //find node by position and change its state
 void GraphManager::ChangeStateOn(Vector3 position, Nodestate state)
 {
 	Node* node = nullptr;
 	
-	//for (int x = 0; x < nodes.size(); x++) {
-	//	//change state if this choosed position
-	//	if (nodes[x].GetPosition() == position) {
-	//		nodes[x].SetState(state);
-	//		node = &nodes[x];
-	//		break;
-	//	}
-	//}
-
-	//for (int x = 0; x < GetNodeGraphSize().x; x++) {
-	//	for (int z = 0; z < GetNodeGraphSize().z; z++) {
-	//		//change state if this choosed position
-	//		if (nodeGraph[x][z].GetPosition() == position) {
-	//			nodeGraph[x][z].SetState(state);
-	//			node = &nodeGraph[x][z];
-	//			break;
-	//		}
-	//	}
-	//}
 	node = GetNodeByPosition(position);
 	node->SetState(state);
 
 	//update players claimed nodes
-	if (state > 0 && node != nullptr) {
-		players[state - 1].AddClaimedNode(node);
-		AddNodeConnections(node);
-		cout << "adding node to player " << state << endl;
-	}
-}
-
-
-//
-void GraphManager::MakeAdjecencyOn(Node node)
-{
-	//check 
-	for (int i = 0; i < s_nodeSides; i++) {
-		Vector3 dir = NormalizeDirection2D(s_nodeDirections[i], node.GetXOffset());
-		//get node by direction
-		int x = node.GetPosition().x + dir.x;
-		int z = node.GetPosition().z + dir.z;
-		//check if there is node in direction
-		Node* p_nextNode = GetNodeByPosition(Vector3(x, 0, z));
-		if (p_nextNode != nullptr) {
-			int nextId = p_nextNode->GetId();
-			int id = node.GetId();
-			edges[id][nextId] = true;
-			std::cout << "connection between: " << id << ", " << nextId << endl;
+	if (node != nullptr) {
+		if (state > 0) {
+			players[state - 1].AddClaimedNode(node);
+			AddNodeConnections(node);
+			cout << "adding node to player " << state << endl;
 		}
+		else
+			cout << "node [" << position.x << "," << position.z << "] is occupied";
 	}
 }
-
 
 //look on each neighbour and add reference to every node of same color
 void GraphManager::AddNodeConnections(Node* node)
@@ -219,6 +142,7 @@ void GraphManager::AddNodeConnections(Node* node)
 //check if player has connection between atleast two vortexes
 bool GraphManager::IsWinner(int playerSide)
 {
+	//get player nodes
 	vector<Node*> nodes = players[playerSide - 1].GetClaimedNodes();
 	vector<Node*> vortexes = players[playerSide - 1].GetClaimedVortexes();
 	int vortexCount = vortexes.size();
@@ -241,27 +165,30 @@ bool GraphManager::IsWinner(int playerSide)
 			if (currentNode.IsContected()) {
 				Node nextNode = *currentNode.GetConnectedNodes()[0];
 
-				//is next node vertex
+				//is next node vortex
 				if (nextNode.IsVortex()) {
 					delete path;
+					gameState = (GameState)playerSide;
+					cout << "player " << playerSide << " won" << endl;
 					return true; //connection is succesful
 				}
 				else {
-					//add to path
+					//add to path and move to next
 					path->push_back(&nextNode);
-					//delete connection
+					//delete searched connection 
 					currentNode.RemoveConnection(0);
-					//move to next
 					currentNode = nextNode;
 				}
 			}
-			else {				
+			else {	
+				if (path->size() < 2) {
+					cout << "path lost" << endl;
+					break;
+				}
 				//return back
 				currentNode = *(*path->end() - 1);
 				path->erase(path->end());
 			}
-			if (path->size() == 0)
-				break;
 		}
 
 		vortexCount--;
@@ -271,58 +198,9 @@ bool GraphManager::IsWinner(int playerSide)
 	return false;
 }
 
-void GraphManager::ShowClaimedNodes(int playerSide)
-{
-	Player* p_player = &players[playerSide - 1];
-
-	for (int i = 0; i < p_player->GetClaimedNodes().size(); i++) {
-		cout << "red node #"<< p_player->GetClaimedNodes()[i]->GetId() << endl;
-	}
-
-	for (int i = 0; i < p_player->GetClaimedVortexes().size(); i++) {
-		cout << "red vortex #" << p_player->GetClaimedVortexes()[i]->GetId() << endl;
-	}
-}
-
-void GraphManager::ShowClaimedNodesConnections(int playerSide)
-{
-	Player* p_player = &players[playerSide - 1];
-
-	for (int i = 0; i < p_player->GetClaimedNodes().size(); i++) {
-		cout << "size: " << p_player->GetClaimedNodes()[i]->GetConnectedNodes().size() << endl;
-		for (int x = 0; x < p_player->GetClaimedNodes()[i]->GetConnectedNodes().size(); x++) {
-			cout << "red node #" << p_player->GetClaimedNodes()[i]->GetId() << " neigbour to: #" << p_player->GetClaimedNodes()[i]->GetNeighbourNodes()[x]->GetId() << endl;
-		}
-	}
-
-	for (int i = 0; i < p_player->GetClaimedVortexes().size(); i++) {
-		for (int x = 0; x < p_player->GetClaimedVortexes()[i]->GetConnectedNodes().size(); x++) {
-			cout << "red vortex #" << p_player->GetClaimedVortexes()[i]->GetId() << " neigbour to: #" << p_player->GetClaimedVortexes()[i]->GetNeighbourNodes()[x]->GetId() << endl;
-		}
-	}
-}
-
 Node* GraphManager::GetNodeByPosition(Vector3 position)
 {
-	//Node* node = nullptr;
-
-	/*for (int x = 0; x < nodes.size(); x++) {
-		if (nodes[x].GetPosition() == position)
-			node = &nodes[x];
-	}*/
-
-	/*Vector3 vec = graphSize;
-	cout << "vec.x: " << vec.x << endl;
-	cout << "vec.z: " << vec.z << endl;
-
-	for (int x = 0; x < GetNodeGraphSize().x; x++) {
-		for (int z = 0; z < GetNodeGraphSize().z; z++) {
-			if (nodeGraph[x][z].GetPosition() == position)
-				node = &nodeGraph[x][z];
-		}
-	}
-
-	return node;*/
+	//is within graph size
 	if(position.x >= 0 && position.x < graphSize.x && position.z >= 0 && position.z < graphSize.z)
 		return &nodeGraph[(int)position.x][(int)position.z];
 	else {

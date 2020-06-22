@@ -3,7 +3,6 @@
 #include <iostream>
 #include <vector>
 #include "Node.h"
-#include "Edge.h"
 #include "Player.h"
 
 using namespace std;
@@ -24,25 +23,21 @@ private:
 	//vector<Node> nodes;
 	Vector3 graphSize;
 	Node** nodeGraph;
-	vector<vector<bool>> edges;
+	//vector<vector<bool>> edges;
 	GameState gameState = GameState::Playing;
 
 public:
 	GraphManager(vector<Node> nodes);
 	GraphManager(Vector3 graphSize, int vortexCount);
+	~GraphManager();
 
 	void DefaultState();
+	void CreateGraph(Vector3 graphSize);
 	void ChangeStateOn(Vector3 position, Nodestate state);
-	void ChangeStateOn(int x, int z, Nodestate state);
-	void MakeAdjecencyOn(Node node);
 	void AddNodeConnections(Node* node);
 	bool IsWinner(int playerSide);
 
-	void ShowClaimedNodes(int playerSide);
-	void ShowClaimedNodesConnections(int playerSide);
-
 	Node* GetNodeByPosition(Vector3 position);
-	Node* GetNodeByConnetion(Node& nodeBase, Vector3 direction);
 	Vector3 GetNodeGraphSize();
 
 	GameState GetGameState();

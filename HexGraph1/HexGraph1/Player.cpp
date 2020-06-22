@@ -1,16 +1,10 @@
 #include "Player.h"
 
-Player::Player()
-{
-}
+Player::Player(){}
 
 Player::Player(PlayerSide playerSide)
 {
 	this->playerSide = playerSide;
-}
-
-Player::~Player()
-{
 }
 
 void Player::AddClaimedNode(Node* node)
@@ -33,7 +27,7 @@ vector<Node*> Player::GetClaimedNodes()
 	return claimedNodes;
 }
 
-//return only vortex nodes
+//return only vortex nodes from claimed
 vector<Node*> Player::GetClaimedVortexes()
 {
 	vector<Node*> vortexes;

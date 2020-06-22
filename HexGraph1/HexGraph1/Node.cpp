@@ -44,6 +44,11 @@ bool Node::IsVortex()
 	return isVortex;
 }
 
+void Node::SetIsVortex(bool isVortex)
+{
+	this->isVortex = isVortex;
+}
+
 bool Node::IsContected()
 {
 	if (connectedNodes.size() > 0)
@@ -56,6 +61,26 @@ float Node::GetXOffset()
 	return xOffset;
 }
 
+void Node::SetNeighbourNodes(Node** neighbourNodes)
+{
+	this->neighbourNodes = neighbourNodes;
+}
+
+Node** Node::GetNeighbourNodes()
+{
+	return neighbourNodes;
+}
+
+int Node::GetNeighbourCount()
+{
+	return neighbourCount;
+}
+
+void Node::SetNeighbourCount(int neighbourCount)
+{
+	this->neighbourCount = neighbourCount;
+}
+
 vector<Node*> Node::GetConnectedNodes()
 {	
 	return connectedNodes;
@@ -65,10 +90,12 @@ void Node::AddConnection(Node* node)
 {
 	connectedNodes.push_back(node);
 	//cout << "connectedNodes size: " << connectedNodes.size() << endl;
+	//cout << "add is empty: " << endl;
 }
 
 //remove connection to this node
 void Node::RemoveConnection(int id)
 {
 	connectedNodes.erase(connectedNodes.begin() + id);
+	//cout << "remove is empty: " << endl;
 }

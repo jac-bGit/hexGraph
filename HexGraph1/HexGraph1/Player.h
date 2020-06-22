@@ -14,7 +14,6 @@ class Player
 private:
 	PlayerSide playerSide;
 	vector<Node*> claimedNodes;
-	//vector<Node*> claimedVortexes;
 
 public:
 	Player();
@@ -22,7 +21,7 @@ public:
 	~Player();
 
 	void AddClaimedNode(Node* node);
-	//void AddClaimedVortex(Node* node);
+	void RestartPlayer();
 
 	PlayerSide GetPlayerSide();
 	vector<Node*> GetClaimedNodes();

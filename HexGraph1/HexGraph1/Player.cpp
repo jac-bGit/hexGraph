@@ -18,13 +18,10 @@ void Player::AddClaimedNode(Node* node)
 	claimedNodes.push_back(node);
 }
 
-//void Player::AddClaimedVortex(Node* node)
-//{
-//	if (node->IsVortex())
-//		claimedVortexes.push_back(node);
-//	else
-//		std::cout << "added node is not vortex!" << endl;
-//}
+void Player::RestartPlayer()
+{
+	claimedNodes.clear();
+}
 
 PlayerSide Player::GetPlayerSide()
 {

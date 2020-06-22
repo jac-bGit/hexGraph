@@ -21,13 +21,15 @@ class GraphManager
 private:
 	Player* players;
 
-	vector<Node> nodes;
-	//vector<Edge> edges;
+	//vector<Node> nodes;
+	Vector3 graphSize;
+	Node** nodeGraph;
 	vector<vector<bool>> edges;
 	GameState gameState = GameState::Playing;
 
 public:
 	GraphManager(vector<Node> nodes);
+	GraphManager(Vector3 graphSize, int vortexCount);
 
 	void DefaultState();
 	void ChangeStateOn(Vector3 position, Nodestate state);
@@ -41,6 +43,7 @@ public:
 
 	Node* GetNodeByPosition(Vector3 position);
 	Node* GetNodeByConnetion(Node& nodeBase, Vector3 direction);
+	Vector3 GetNodeGraphSize();
 
 	GameState GetGameState();
 	void SetGameState(GameState gameState);

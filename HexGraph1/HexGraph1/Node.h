@@ -51,6 +51,8 @@ private:
 	float xOffset = 0;
 	Nodestate state = Nodestate::Grey;
 	bool isVortex;
+	Node** neighbourNodes;
+	int neighbourCount = 0;
 	vector<Node*> connectedNodes;
 
 public:
@@ -63,8 +65,13 @@ public:
 	int GetState();
 	void SetState(Nodestate state);
 	bool IsVortex();
+	void SetIsVortex(bool isVortex);
 	bool IsContected();
 	float GetXOffset();
+	void SetNeighbourNodes(Node** neighbourNodes);
+	Node** GetNeighbourNodes();
+	int GetNeighbourCount();
+	void SetNeighbourCount(int neighbourCount);
 	vector<Node*> GetConnectedNodes();
 
 	void AddConnection(Node* node);

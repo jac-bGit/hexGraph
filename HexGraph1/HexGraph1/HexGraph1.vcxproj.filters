@@ -30,6 +30,9 @@
     <ClCompile Include="GraphManager.cpp">
       <Filter>Zdrojové soubory\Components</Filter>
     </ClCompile>
+    <ClCompile Include="GraphGenerator.cpp">
+      <Filter>Zdrojové soubory\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Node.h">
@@ -42,6 +45,9 @@
       <Filter>Hlavičkové soubory</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
+      <Filter>Hlavičkové soubory</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphGenerator.h">
       <Filter>Hlavičkové soubory</Filter>
     </ClInclude>
   </ItemGroup>

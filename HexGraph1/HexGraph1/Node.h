@@ -36,7 +36,8 @@ enum Nodestate
 {
 	Grey = 0,
 	Red = 1,
-	Blue = 2
+	Blue = 2,
+	BlockedNode = 3
 };
 
 class Node
